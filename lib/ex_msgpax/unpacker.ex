@@ -3,10 +3,8 @@ defmodule ExMsgpax.Unpacker do
   require ExMsgpax.Types
   import ExMsgpax.Types
 
-  def unpack(%Msgpax.Ext{type: ext_type(:exception), data: data}) do
-    {struct, data} = Msgpax.unpack!(data, ext: ExMsgpax.Unpacker)
-    data = for {k, v} <- data, into: %{}, do: {String.to_atom(k), v}
-    {:ok, struct!(String.to_atom(struct), data)}
+  def unpack(%Msgpax.Ext{type: ext_type(:atom), data: data}) do
+    {:ok, String.to_atom(data)}
   end
 
   def unpack(%Msgpax.Ext{type: ext_type(:datetime), data: data}) do
@@ -23,5 +21,10 @@ defmodule ExMsgpax.Unpacker do
 
   def unpack(%Msgpax.Ext{type: ext_type(:tuple), data: data}) do
     {:ok, Msgpax.unpack!(data, ext: ExMsgpax.Unpacker) |> List.to_tuple()}
+  end
+
+  def unpack(%Msgpax.Ext{type: ext_type(:exception), data: data}) do
+    {struct, data} = Msgpax.unpack!(data, ext: ExMsgpax.Unpacker)
+    {:ok, struct!(struct, data)}
   end
 end

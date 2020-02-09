@@ -5,12 +5,7 @@ defmodule ExMsgpaxTest do
   doctest ExMsgpax
 
   test "pack/unpack" do
-    data =
-      try do
-	1 / 0
-      rescue
-	err -> err
-      end
+    data = %RuntimeError{}
     assert data == pack!(data) |> unpack!    
     data = {1, 2, 3, {"foo", "bar"}}
     assert data == pack!(data) |> unpack!

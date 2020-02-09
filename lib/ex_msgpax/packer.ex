@@ -1,3 +1,17 @@
+defimpl Msgpax.Packer, for: Atom do
+  require ExMsgpax.Types
+  import ExMsgpax.Types
+
+  def pack(nil), do: [0xC0]
+  def pack(false), do: [0xC2]
+  def pack(true), do: [0xC3]
+
+  def pack(atom) do
+    Msgpax.Ext.new(ext_type(:atom), to_string(atom))
+    |> Msgpax.Packer.pack()
+  end
+end
+
 defimpl Msgpax.Packer, for: NaiveDateTime do
   require ExMsgpax.Types
   import ExMsgpax.Types

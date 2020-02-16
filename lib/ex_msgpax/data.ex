@@ -7,6 +7,9 @@ defmodule ExMsgpax.Data do
       iex> new(nil)
       #ExMsgpax.Data<size:1>
 
+      iex> new(1) |> size()
+      1
+
       iex> new(999) |> extract()
       999
 
@@ -26,6 +29,9 @@ defmodule ExMsgpax.Data do
   def extract(%Data{} = data) do
     ExMsgpax.unpack!(data.content)
   end
+
+  @spec size(t) :: integer
+  def size(%Data{content: content}), do: byte_size(content)
 
   defimpl Inspect do
     import Inspect.Algebra

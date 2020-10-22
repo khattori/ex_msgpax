@@ -45,5 +45,5 @@ defmodule ExMsgpax do
       iex> unpack!(<<195>>)
       true
   """
-  def unpack!(data), do: Msgpax.unpack!(data, ext: ExMsgpax.Unpacker)  
+  def unpack!(data), do: Msgpax.unpack!(data, ext: ExMsgpax.Unpacker)
 end

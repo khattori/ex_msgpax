@@ -4,4 +4,3 @@ defmodule ExMsgpax.Data.Test do
 
   doctest ExMsgpax.Data
 end
-

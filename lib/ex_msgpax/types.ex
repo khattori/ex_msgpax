@@ -9,4 +9,12 @@ defmodule ExMsgpax.Types do
     tuple 4
     exception 5
   end
+
+  @opaque_min_type_code 16
+  @opaque_max_type_code 127
+
+  #
+  # 16 - 127 は Opaque なデータ型のために予約
+  #
+  defguard is_opaque(type) when type >= @opaque_min_type_code and type <= @opaque_max_type_code
 end

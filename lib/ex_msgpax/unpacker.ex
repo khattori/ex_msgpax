@@ -27,4 +27,6 @@ defmodule ExMsgpax.Unpacker do
     {struct, data} = Msgpax.unpack!(data, ext: ExMsgpax.Unpacker)
     {:ok, struct!(struct, data)}
   end
+
+  def unpack(%Msgpax.Ext{} = ext), do: {:ok, ext}
 end

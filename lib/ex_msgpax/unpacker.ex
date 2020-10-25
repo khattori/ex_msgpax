@@ -24,8 +24,13 @@ defmodule ExMsgpax.Unpacker do
   end
 
   def unpack(%Msgpax.Ext{type: ext_type(:exception), data: data}) do
-    {struct, data} = Msgpax.unpack!(data, ext: ExMsgpax.Unpacker)
-    {:ok, struct!(struct, data)}
+    exc =
+      Msgpax.unpack!(data, ext: ExMsgpax.Unpacker)
+      |> case do
+           %{"name" => name, "message" => message} -> %ExMsgpax.Exception{name: name, message: message}
+           {struct, data} -> struct!(struct, data)
+         end
+    {:ok, exc}
   end
 
   def unpack(%Msgpax.Ext{} = ext), do: {:ok, ext}

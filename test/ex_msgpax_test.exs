@@ -1,8 +1,10 @@
 defmodule ExMsgpaxTest do
   use ExUnit.Case
+  require ExMsgpax.Types
+
+  alias ExMsgpax.Types
 
   import ExMsgpax
-
   doctest ExMsgpax
 
   test "pack/unpack" do
@@ -18,5 +20,15 @@ defmodule ExMsgpaxTest do
     assert data == pack!(data) |> unpack!
     data = Msgpax.Ext.new(99, "***OPAQUE DATA***")
     assert data == pack!(data) |> unpack!
+  end
+
+  test "unpack exception" do
+    data = pack!(%{"name" => "TestError", "message" => "test error message"})
+    exc =
+      %Msgpax.Ext{type: Types.ext_type(:exception), data: data}
+      |> pack!
+      |> unpack!
+    assert exc == %ExMsgpax.Exception{message: "test error message", name: "TestError"}
+    assert Exception.message(exc) == "TestError: test error message"
   end
 end

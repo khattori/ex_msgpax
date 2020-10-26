@@ -46,4 +46,19 @@ defmodule ExMsgpax do
       true
   """
   def unpack!(data), do: Msgpax.unpack!(data, ext: ExMsgpax.Unpacker)
+
+  @doc """
+  ## Examples
+      iex> is_packable?(123)
+      true
+
+      iex> is_packable?(%RuntimeError{})
+      true
+
+      iex> is_packable?(fn -> :ok end)
+      false
+  """
+  def is_packable?(data) do
+    not is_nil(Msgpax.Packer.impl_for(data)) or Exception.exception?(data)
+  end
 end

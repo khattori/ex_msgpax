@@ -7,7 +7,7 @@ defmodule ExMsgpax.Unpacker do
     {:ok, String.to_atom(data)}
   end
 
-  def unpack(%Msgpax.Ext{type: ext_type(:datetime), data: data}) do
+  def unpack(%Msgpax.Ext{type: ext_type(:naivedatetime), data: data}) do
     {:ok, NaiveDateTime.from_iso8601!(data)}
   end
 
@@ -21,6 +21,13 @@ defmodule ExMsgpax.Unpacker do
 
   def unpack(%Msgpax.Ext{type: ext_type(:tuple), data: data}) do
     {:ok, Msgpax.unpack!(data, ext: ExMsgpax.Unpacker) |> List.to_tuple()}
+  end
+
+  def unpack(%Msgpax.Ext{type: ext_type(:struct), data: data}) do
+    case Msgpax.unpack!(data, ext: ExMsgpax.Unpacker) do
+      %{"name" => name, "data" => data} ->
+        {:ok, struct(name, data)}
+    end
   end
 
   def unpack(%Msgpax.Ext{type: ext_type(:exception), data: data}) do

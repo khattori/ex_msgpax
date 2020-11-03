@@ -17,7 +17,7 @@ defimpl Msgpax.Packer, for: NaiveDateTime do
   import ExMsgpax.Types
 
   def pack(datetime) do
-    Msgpax.Ext.new(ext_type(:datetime), to_string(datetime))
+    Msgpax.Ext.new(ext_type(:naivedatetime), to_string(datetime))
     |> Msgpax.Packer.pack()
   end
 end

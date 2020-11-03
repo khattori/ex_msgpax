@@ -25,14 +25,19 @@ defmodule ExMsgpax do
     |> Msgpax.pack!(iodata: false)
   end
 
-  defp ext_pack(data) do
-    if Exception.exception? data do
-      data = Msgpax.pack! %{"name" => data.__struct__, "message" => Exception.message(data)}, iodata: false
-      Msgpax.Ext.new(ext_type(:exception), data)
-    else
-      data
+  defp ext_pack(data) when is_struct(data) do
+    cond do
+      not is_nil(Msgpax.Packer.impl_for(data)) -> data
+      Exception.exception? data ->
+        data = Msgpax.pack! %{"name" => data.__struct__, "message" => Exception.message(data)}, iodata: false
+        Msgpax.Ext.new(ext_type(:exception), data)
+      true ->
+        data = Msgpax.pack! %{"name" => data.__struct__, "data" => Map.from_struct(data)}, iodata: false
+        Msgpax.Ext.new(ext_type(:struct), data)
     end
   end
+
+  defp ext_pack(data), do: data
 
   @doc """
   ## Examples
@@ -55,10 +60,13 @@ defmodule ExMsgpax do
       iex> is_packable?(%RuntimeError{})
       true
 
+      iex> is_packable?(%URI{})
+      true
+
       iex> is_packable?(fn -> :ok end)
       false
   """
   def is_packable?(data) do
-    not is_nil(Msgpax.Packer.impl_for(data)) or Exception.exception?(data)
+    not is_nil(Msgpax.Packer.impl_for(data)) or is_struct(data)
   end
 end

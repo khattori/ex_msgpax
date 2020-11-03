@@ -2,6 +2,30 @@
 
 ExMsgpax provides extensions for Msgpax to support tuple, naive datetime, etc.
 
+## Extention Types
+
+ExMsgpax uses the Extention Types of MessagePack for data types which aare not supported by Msgpax.
+
+| Type | Code | Remarks |
+| ---- | ---- | ------- |
+| Atom | 0 | Atom types are converted to atom types, not strings. |
+| NaiveDateTime | 1 | |
+| Date | 2 | |
+| Time | 3 | |
+| Tuple | 4 | |
+| Structs | 5 | |
+| Exceptions | 6 | |
+
+## Examples
+
+```
+iex> ExMsgpax.pack {1, 2, 3}
+{:ok, <<214, 4, 147, 1, 2, 3>>}
+
+iex> ExMsgpax.unpack <<214, 4, 147, 1, 2, 3>>
+{:ok, {1, 2, 3}}
+```
+
 ## Installation
 
 If [available in Hex](https://hex.pm/docs/publish), the package can be installed

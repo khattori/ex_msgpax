@@ -3,11 +3,12 @@ defmodule ExMsgpax.Types do
 
   enum ext_type do
     atom 0
-    datetime 1
+    naivedatetime 1
     date 2
     time 3
     tuple 4
-    exception 5
+    struct 5
+    exception 6
   end
 
   @opaque_min_type_code 16

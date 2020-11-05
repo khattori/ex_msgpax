@@ -24,14 +24,28 @@ defmodule ExMsgpax.Unpacker do
   end
 
   def unpack(%Msgpax.Ext{type: ext_type(:struct), data: data}) do
+    #
+    # nameに対応する構造体が定義されていない場合、Structデータを返す
+    #
     case Msgpax.unpack!(data, ext: ExMsgpax.Unpacker) do
+      %{"name" => name, "data" => data} when is_atom(name) ->
+        try do
+          {:ok, struct(name, data)}
+        rescue
+          UndefinedFunctionError -> {:ok, %ExMsgpax.Struct{name: name, data: data}}
+        end
       %{"name" => name, "data" => data} ->
-        {:ok, struct(name, data)}
+        {:ok, %ExMsgpax.Struct{name: name, data: data}}
     end
   end
 
   def unpack(%Msgpax.Ext{type: ext_type(:exception), data: data}) do
+    #
+    # 定義されていない例外の場合、Exceptionデータを返す
+    #
     case Msgpax.unpack!(data, ext: ExMsgpax.Unpacker) do
+      %{"name" => name, "data" => data} ->
+        {:ok, struct(name, data)}
       %{"name" => name, "message" => message} ->
         {:ok, %ExMsgpax.Exception{name: name, message: message}}
     end

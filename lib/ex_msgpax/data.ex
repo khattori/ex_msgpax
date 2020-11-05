@@ -33,6 +33,10 @@ defmodule ExMsgpax.Data do
   @spec size(t) :: integer
   def size(%Data{content: content}), do: byte_size(content)
 
+  defimpl Msgpax.Packer do
+    def pack(%ExMsgpax.Data{content: content}), do: content
+  end
+
   defimpl Inspect do
     import Inspect.Algebra
 

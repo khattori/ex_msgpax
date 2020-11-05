@@ -18,8 +18,10 @@ defmodule ExMsgpaxTest do
     assert data == pack!(data) |> unpack!
     data = URI.parse("https://eight-birds.com")
     assert data == pack!(data) |> unpack!
+    data = %ExMsgpax.Struct{name: "test", data: %{"key": "val"}}
+    assert data == pack!(data) |> unpack!
     data = %RuntimeError{}
-    assert %ExMsgpax.Exception{name: RuntimeError, message: "runtime error"} == pack!(data) |> unpack!
+    assert data == pack!(data) |> unpack!
     data = Msgpax.Ext.new(99, "***OPAQUE DATA***")
     assert data == pack!(data) |> unpack!
   end

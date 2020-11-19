@@ -18,7 +18,7 @@ defmodule ExMsgpaxTest do
     assert data == pack!(data) |> unpack!
     data = URI.parse("https://eight-birds.com")
     assert data == pack!(data) |> unpack!
-    data = %ExMsgpax.Struct{name: "test", data: %{"key": "val"}}
+    data = %ExMsgpax.Struct{name: "test", data: %{"key"=> "val"}}
     assert data == pack!(data) |> unpack!
     data = %RuntimeError{}
     assert data == pack!(data) |> unpack!

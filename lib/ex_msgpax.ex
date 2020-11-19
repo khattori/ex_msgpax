@@ -60,7 +60,7 @@ defmodule ExMsgpax do
       iex> is_packable?(%RuntimeError{})
       true
 
-      iex> is_packable?(%URI{})
+      iex> is_packable?(1..5)
       true
 
       iex> is_packable?(fn -> :ok end)

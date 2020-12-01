@@ -65,8 +65,12 @@ defmodule ExMsgpax do
 
       iex> is_packable?(fn -> :ok end)
       false
+
+      iex> is_packable?(1..5 |> Stream.take(1))
+      false
   """
   def is_packable?(data) do
-    not is_nil(Msgpax.Packer.impl_for(data)) or is_struct(data)
+    not is_nil(Msgpax.Packer.impl_for(data))
+    or is_struct(data) and data.__struct__ != Stream
   end
 end

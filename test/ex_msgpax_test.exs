@@ -20,6 +20,8 @@ defmodule ExMsgpaxTest do
     assert data == pack!(data) |> unpack!
     data = %ExMsgpax.Struct{name: "test", data: %{"key"=> "val"}}
     assert data == pack!(data) |> unpack!
+    data = %ExMsgpax.Struct{name: Foo, data: %{"key"=> "val"}}
+    assert data == pack!(data) |> unpack!
     data = %RuntimeError{}
     assert data == pack!(data) |> unpack!
     data = Msgpax.Ext.new(99, "***OPAQUE DATA***")

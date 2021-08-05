@@ -5,7 +5,7 @@ defmodule ExMsgpax.MixProject do
     [
       app: :ex_msgpax,
       version: "0.1.0",
-      elixir: "~> 1.11",
+      elixir: "~> 1.12",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
       test_coverage: [tool: ExCoveralls]
@@ -24,9 +24,9 @@ defmodule ExMsgpax.MixProject do
     [
       # {:dep_from_hexpm, "~> 0.3.0"},
       # {:dep_from_git, git: "https://github.com/elixir-lang/my_dep.git", tag: "0.1.0"}
-      {:msgpax, "~> 2.2"},
+      {:msgpax, "~> 2.3"},
       {:ex_const, "~> 0.2.4"},
-      {:excoveralls, "~> 0.12.2", only: :test}
+      {:excoveralls, "~> 0.13", only: :test}
     ]
   end
 end

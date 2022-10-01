@@ -8,7 +8,7 @@ defmodule ExMsgpaxTest do
   doctest ExMsgpax
 
   test "pack/unpack" do
-    data = {1, 2, 3, {"foo", "bar"}}
+    data = {1, 2, 3, {"foo", "bar"}, [true, false]}
     assert data == pack!(data) |> unpack!
     data = ~N[2020-02-09 12:34:56]
     assert data == pack!(data) |> unpack!

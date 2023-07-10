@@ -28,7 +28,7 @@ defmodule ExMsgpax do
   defp ext_pack(data) when is_struct(data) do
     cond do
       not is_nil(Msgpax.Packer.impl_for(data)) -> data
-      Exception.exception? data ->
+      is_exception(data) ->
         data = Msgpax.pack! %{"name" => data.__struct__, "data" => Map.from_struct(data), "message" => Exception.message(data)}, iodata: false
         Msgpax.Ext.new(ext_type(:exception), data)
       true ->

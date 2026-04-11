@@ -8,7 +8,7 @@ defmodule ExMsgpaxTest do
   doctest ExMsgpax
 
   test "pack/unpack" do
-    data = {1, 2, 3, {"foo", "bar"}, [true, false]}
+    data = {1, 2, 3, {"foo", "bar"}, [true, false], %{"key" => "val"}, :atom, nil}
     assert data == pack!(data) |> unpack!
     data = ~N[2020-02-09 12:34:56]
     assert data == pack!(data) |> unpack!
@@ -28,6 +28,17 @@ defmodule ExMsgpaxTest do
     assert data == pack!(data) |> unpack!
   end
 
+  test "pack/unpack compound struct" do
+    data = [%RuntimeError{message: "error1"}]
+    assert data == pack!(data) |> unpack!
+    data = {%URI{}}
+    assert data == pack!(data) |> unpack!
+    data = %{"key" => %URI{}}
+    assert data == pack!(data) |> unpack!
+    data = %URI{host: %URI{host: "example.com"}}
+    assert data == pack!(data) |> unpack!
+  end
+
   test "unpack exception" do
     data = pack!(%{"name" => "TestError", "message" => "test error message"})
     exc =
@@ -36,5 +47,11 @@ defmodule ExMsgpaxTest do
       |> unpack!
     assert exc == %ExMsgpax.Exception{message: "test error message", name: "TestError"}
     assert Exception.message(exc) == "TestError: test error message"
+  end
+
+  test "pack! raise exception" do
+    assert_raise Protocol.UndefinedError, fn ->
+      pack!(fn -> :ok end)
+    end
   end
 end

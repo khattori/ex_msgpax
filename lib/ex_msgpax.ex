@@ -21,22 +21,27 @@ defmodule ExMsgpax do
       <<205, 39, 15>>
   """
   def pack!(data) do
-    ext_pack(data)
-    |> Msgpax.pack!(iodata: false)
+    case pack(data) do
+      {:ok, packed} -> packed
+      {:error, exception} -> raise exception
+    end
   end
 
   defp ext_pack(data) when is_struct(data) do
     cond do
       not is_nil(Msgpax.Packer.impl_for(data)) -> data
       is_exception(data) ->
-        data = Msgpax.pack! %{"name" => data.__struct__, "data" => Map.from_struct(data), "message" => Exception.message(data)}, iodata: false
+        data = Msgpax.pack! %{"name" => data.__struct__, "data" => ext_pack(Map.from_struct(data)), "message" => Exception.message(data)}, iodata: false
         Msgpax.Ext.new(ext_type(:exception), data)
       true ->
-        data = Msgpax.pack! %{"name" => data.__struct__, "data" => Map.from_struct(data)}, iodata: false
+        data = Msgpax.pack! %{"name" => data.__struct__, "data" => ext_pack(Map.from_struct(data))}, iodata: false
         Msgpax.Ext.new(ext_type(:struct), data)
     end
   end
 
+  defp ext_pack(data) when is_list(data), do: Enum.map(data, &ext_pack/1)
+  defp ext_pack(data) when is_map(data), do: Map.new(data, fn {k, v} -> {ext_pack(k), ext_pack(v)} end)
+  defp ext_pack(data) when is_tuple(data), do: data |> Tuple.to_list() |> Enum.map(&ext_pack/1) |> List.to_tuple()
   defp ext_pack(data), do: data
 
   @doc """

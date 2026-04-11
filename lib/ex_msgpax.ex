@@ -27,21 +27,26 @@ defmodule ExMsgpax do
     end
   end
 
+  defp ext_pack(%ExMsgpax.Struct{name: name, data: data}) do
+    %ExMsgpax.Struct{name: ext_pack(name), data: ext_pack(data)}
+  end
   defp ext_pack(data) when is_struct(data) do
     cond do
       not is_nil(Msgpax.Packer.impl_for(data)) -> data
       is_exception(data) ->
-        data = Msgpax.pack! %{"name" => data.__struct__, "data" => ext_pack(Map.from_struct(data)), "message" => Exception.message(data)}, iodata: false
+        data = Msgpax.pack! %{"name" => ext_pack(data.__struct__), "data" => ext_pack(Map.from_struct(data)), "message" => Exception.message(data)}, iodata: false
         Msgpax.Ext.new(ext_type(:exception), data)
       true ->
-        data = Msgpax.pack! %{"name" => data.__struct__, "data" => ext_pack(Map.from_struct(data))}, iodata: false
+        data = Msgpax.pack! %{"name" => ext_pack(data.__struct__), "data" => ext_pack(Map.from_struct(data))}, iodata: false
         Msgpax.Ext.new(ext_type(:struct), data)
     end
   end
-
   defp ext_pack(data) when is_list(data), do: Enum.map(data, &ext_pack/1)
   defp ext_pack(data) when is_map(data), do: Map.new(data, fn {k, v} -> {ext_pack(k), ext_pack(v)} end)
   defp ext_pack(data) when is_tuple(data), do: data |> Tuple.to_list() |> Enum.map(&ext_pack/1) |> List.to_tuple()
+  defp ext_pack(atom) when is_atom(atom) and not is_nil(atom) and not is_boolean(atom) do
+    Msgpax.Ext.new(ext_type(:atom), to_string(atom))
+  end
   defp ext_pack(data), do: data
 
   @doc """

@@ -20,7 +20,7 @@ defmodule ExMsgpaxTest do
     assert data == pack!(data) |> unpack!
     data = %ExMsgpax.Struct{name: "test", data: %{"key"=> "val"}}
     assert data == pack!(data) |> unpack!
-    data = %ExMsgpax.Struct{name: Foo, data: %{"key"=> "val"}}
+    data = %ExMsgpax.Struct{name: Foo, data: %{"key"=> "val", "atom" => :atom}}
     assert data == pack!(data) |> unpack!
     data = %RuntimeError{}
     assert data == pack!(data) |> unpack!

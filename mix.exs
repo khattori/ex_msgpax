@@ -36,6 +36,7 @@ defmodule ExMsgpax.MixProject do
       {:msgpax, "~> 2.4"},
       {:ex_const, "~> 0.3.0"},
       {:excoveralls, "~> 0.18.5", only: :test},
+      {:ex_doc, "~> 0.40.1", only: :dev, runtime: false},
       {:mix_version, "~> 2.4", only: [:dev, :test], runtime: false},
     ]
   end

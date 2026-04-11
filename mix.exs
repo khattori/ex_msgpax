@@ -8,7 +8,8 @@ defmodule ExMsgpax.MixProject do
       elixir: "~> 1.18",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
-      test_coverage: [tool: ExCoveralls]
+      test_coverage: [tool: ExCoveralls],
+      versioning: versioning()
     ]
   end
 
@@ -28,6 +29,15 @@ defmodule ExMsgpax.MixProject do
       {:ex_const, "~> 0.3.0"},
       {:excoveralls, "~> 0.18.5", only: :test},
       {:mix_version, "~> 2.4", only: [:dev, :test], runtime: false},
+    ]
+  end
+
+  defp versioning do
+    [
+      annotate:   true,
+      annotation: "new version %s",
+      commit_msg: "new version %s",
+      tag_prefix: "v"
     ]
   end
 end
